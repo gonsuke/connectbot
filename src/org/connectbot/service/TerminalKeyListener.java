@@ -112,8 +112,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 		try {
 			final boolean hardKeyboardHidden = manager.hardKeyboardHidden;
 
-			Log.d("key", "code:" + event.getScanCode() + "," + event.getDeviceId() + "," + event.getKeyCode());
-
 			// Ignore all key-up events except for the special keys
 			if (event.getAction() == KeyEvent.ACTION_UP) {
 				// There's nothing here for virtual keyboard users.
