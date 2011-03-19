@@ -51,6 +51,9 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 	public final static int META_SLASH = 0x40;
 	public final static int META_TAB = 0x80;
 
+	public final static int SCAN_CODE_LEFT_CTRL = 0x1D;
+	public final static int SCAN_CODE_LEFT_ALT = 0x38;
+
 	// The bit mask of momentary and lock states for each
 	public final static int META_CTRL_MASK = META_CTRL_ON | META_CTRL_LOCK;
 	public final static int META_ALT_MASK = META_ALT_ON | META_ALT_LOCK;
@@ -108,6 +111,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		try {
 			final boolean hardKeyboardHidden = manager.hardKeyboardHidden;
+
+			Log.d("key", "code:" + event.getScanCode() + "," + event.getDeviceId() + "," + event.getKeyCode());
 
 			// Ignore all key-up events except for the special keys
 			if (event.getAction() == KeyEvent.ACTION_UP) {
@@ -190,6 +195,20 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			if (mDeadKey != 0) {
 				key = KeyCharacterMap.getDeadChar(mDeadKey, keyCode);
 				mDeadKey = 0;
+			}
+
+			// Add left ctrl modification
+			if (event.getScanCode() == SCAN_CODE_LEFT_CTRL) {
+				metaState |= META_CTRL_ON;
+				bridge.redraw();
+				return true;
+			}
+
+			// Add left alt modification
+			if (event.getScanCode() == SCAN_CODE_LEFT_ALT) {
+				metaState |= META_ALT_ON;
+				bridge.redraw();
+				return true;
 			}
 
 			final boolean printing = (key != 0);
