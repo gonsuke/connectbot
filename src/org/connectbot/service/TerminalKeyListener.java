@@ -53,6 +53,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
 	public final static int SCAN_CODE_LEFT_CTRL = 0x1D;
 	public final static int SCAN_CODE_LEFT_ALT = 0x38;
+	public final static int SCAN_CODE_ESC = 0x01;
 
 	// The bit mask of momentary and lock states for each
 	public final static int META_CTRL_MASK = META_CTRL_ON | META_CTRL_LOCK;
@@ -206,6 +207,12 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			if (event.getScanCode() == SCAN_CODE_LEFT_ALT) {
 				metaState |= META_ALT_ON;
 				bridge.redraw();
+				return true;
+			}
+
+			// Avoid back-button action for ESC.
+			if (event.getScanCode() == SCAN_CODE_ESC) {
+				sendEscape();
 				return true;
 			}
 
